@@ -21,24 +21,23 @@ disp(celebrity_list);
 Question = "Which celebrity twitter account do you want more information on? \nPlease type in their FULL handle here: ";
 celebrity_handle = input(Question, 's');
 while celebrity_handle ~= celebrity_list(:)
-    Question2 = "I'm sorry, that @ is not in our list. Which account would you like to look into?";
+    Question2 = "I'm sorry, that @ is not in our list. Which account would you like to look into? ";
     celebrity_handle = input(Question2, 's');
 end
 
 celebrity = celebrity_handle(2:end);
 celebrity_csv = strcat(celebrity, '.csv');
 
+disp("Here is a wordcloud and histogram of the most frequent words used on their account!")
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %function_clean_and_read
-%function clean_and_read(celebrity)
 
 % Removes retweets and keeps original content
 everything_tweets = readtable(celebrity_csv);
 toDelete = (everything_tweets.TweetType == "Retweet");
 everything_tweets(toDelete,:) = [];
 everything_tweets.TweetType = [];
-
 original_tweets = everything_tweets;
 
 %Pre-processing tweets
@@ -72,6 +71,6 @@ topics_in_bag = fitlda(bag,numTopics,'Verbose',0);
 %Making of the histogram
 figure;
 his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
-    "Orientation", "vertical", "FaceColor", "#92ba70", "DisplayOrder", "ascend");
+    "Orientation", "vertical", "FaceColor", "#ED64C4", "DisplayOrder", "ascend");
 title("The most frequent words");
 xlabel("Count");
