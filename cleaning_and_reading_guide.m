@@ -104,7 +104,7 @@ mostFreq = topkwords(bag, 20);
 wc = wordcloud(bag); 
 
 numTopics = 8;
-topics_in_bag = fitlda(bag,numTopics);
+topics_in_bag = fitlda(bag,numTopics,'Verbose',0);
 
 figure;
 histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
