@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%
-function_clean_and_read
+%function_clean_and_read
 %function clean_and_read(celebrity)
 
 % Removes retweets and keeps original content
@@ -31,15 +31,16 @@ bag = removeInfrequentWords(bag, 2);
 [bag, docsRemoved] = removeEmptyDocuments(bag);
 
 
+%Making of the wordclous
 mostFreq = topkwords(bag, 20);
-
 wc = wordcloud(bag); 
 
 numTopics = 8;
 topics_in_bag = fitlda(bag,numTopics);
 
+%Making of the histogram
 figure;
-histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
-    "Orientation", "horizontal", "DisplayOrder", "ascend");
-title("The most frequent words")
-xlabel("Count")
+his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
+    "Orientation", "vertical", "FaceColor", "#EDB120", "DisplayOrder", "ascend");
+title("The most frequent words");
+xlabel("Count");
