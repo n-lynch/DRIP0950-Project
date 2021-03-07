@@ -11,14 +11,16 @@ celebrity_list = ["@youtube", "@twitter", "@theellenshow", "@taylorswift13", "@s
 
 celebrity_list = reshape(celebrity_list, 13, 4);
 
+%Welcome message, shows 50 celebrity handles
 disp("Hi! Welcome!")
 disp("We've created this project so you can see the analyses of popular twitter accounts' tweets!");
+disp("The dataset we're using includes over 3200 tweets of every twitter account it has to offer!");
 disp("Here are the handles of the 50 celebrity twitters you have to choose from:")
 fprintf('\n') 
 disp(celebrity_list);
 
-
-Question = "Which celebrity twitter account do you want more information on? \nPlease type in their FULL handle here: ";
+%Asks user for input, if not on the list it will ask you again
+Question = "Which celebrity twitter account do you want more information on? \nPlease type in their FULL handle here including the '@' symbol: ";
 celebrity_handle = input(Question, 's');
 while celebrity_handle ~= celebrity_list(:)
     Question2 = "I'm sorry, that @ is not in our list. Which account would you like to look into? ";
@@ -28,20 +30,19 @@ end
 celebrity = celebrity_handle(2:end);
 celebrity_csv = strcat(celebrity, '.csv');
 
-disp("Here is a wordcloud and histogram of the most frequent words used on their account!")
+disp("Here is a wordcloud and histogram of the words used most frequently on their account!")
 
 %%%%%%%%%%%%%%%%%%%%%%%
-%function_clean_and_read
 
 % Removes retweets and keeps original content
-everything_tweets = readtable(celebrity_csv);
-toDelete = (everything_tweets.TweetType == "Retweet");
+everything_tweets = readtable(celebrity_csv,'PreserveVariableNames',true);
+toDelete = (everything_tweets.("Tweet Type") == "Retweet");
 everything_tweets(toDelete,:) = [];
-everything_tweets.TweetType = [];
+everything_tweets.("Tweet Type") = [];
 original_tweets = everything_tweets;
 
 %Pre-processing tweets
-original_tweets = original_tweets.TweetContent;
+original_tweets = original_tweets.("Tweet Content");
 clean_tweets = eraseURLs(original_tweets);
 clean_tweets = lower(clean_tweets);
 clean_tweets = strtrim(clean_tweets);
