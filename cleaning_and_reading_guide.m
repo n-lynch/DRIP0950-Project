@@ -1,5 +1,5 @@
 %How to clean things :) 
-t_Wiz_unclean = readtable('tweets.csv');
+t_Wiz_unclean = readtable('wizkhalifa.csv');
 toDelete = (t_Wiz_unclean.TweetType == "Retweet");
 t_Wiz_unclean(toDelete,:) = [];
 t_Wiz_unclean.TweetType = [];
@@ -71,7 +71,7 @@ function_clean_and_read
 %function clean_and_read(celebrity)
 
 % Removes retweets and keeps original content
-everything_tweets = readtable('tweets.csv');
+everything_tweets = readtable('wizkhalifa.csv');
 toDelete = (everything_tweets.TweetType == "Retweet");
 everything_tweets(toDelete,:) = [];
 everything_tweets.TweetType = [];
