@@ -20,5 +20,11 @@ disp(celebrity_list);
 
 Question = 'Which celebrity twitter account do you want more information on? \nPlease type in their FULL handle here: ';
 celebrity_handle = input(Question, 's');
+if celebrity_handle ~= celebrity_list(:)
+    Question2 = "I'm sorry, that @ is not in our list. Which account would you like to look into?";
+    celebrity_handle = input(Question2, 's');
+end
+
 celebrity = celebrity_handle(2:end);
-disp(celebrity);
+celebrity_csv = strcat(celebrity, '.csv');
+disp(celebrity_csv);
