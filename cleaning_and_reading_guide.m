@@ -1,6 +1,6 @@
 %How to clean things :) 
 t_Wiz_unclean = readtable('wizkhalifa.csv');
-toDelete = (t_Wiz_unclean.TweetType == "Retweet");
+toDelete = (t_Wiz_unclean.("TweetType") == "Retweet");
 t_Wiz_unclean(toDelete,:) = [];
 t_Wiz_unclean.TweetType = [];
 
