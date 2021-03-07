@@ -41,6 +41,6 @@ topics_in_bag = fitlda(bag,numTopics);
 %Making of the histogram
 figure;
 his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
-    "Orientation", "vertical", "FaceColor", "#EDB120", "DisplayOrder", "ascend");
+    "Orientation", "vertical", "FaceColor", "#92ba70", "DisplayOrder", "ascend");
 title("The most frequent words");
 xlabel("Count");
