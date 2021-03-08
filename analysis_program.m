@@ -76,7 +76,7 @@ his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeDa
 title("The most frequent words");
 xlabel("Count");
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
