@@ -64,7 +64,7 @@ bag = removeInfrequentWords(bag, 2);
 
 %Making of the wordclous
 mostFreq = topkwords(bag, 20);
-wc = wordcloud(bag, 'HighlightColor', 'r', 'Color', 'g');
+wc = wordcloud(bag, 'HighlightColor', '#64A6ED', 'Color', '#ED64C4');
 
 numTopics = 8;
 topics_in_bag = fitlda(bag,numTopics,'Verbose',0);
@@ -75,3 +75,13 @@ his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeDa
     "Orientation", "vertical", "FaceColor", "#ED64C4", "DisplayOrder", "ascend");
 title("The most frequent words");
 xlabel("Count");
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Sentiment thingy
+
+data = readLexicon;
+
+
+
+
+
