@@ -64,7 +64,7 @@ bag = removeInfrequentWords(bag, 2);
 
 %Making of the wordclous
 mostFreq = topkwords(bag, 20);
-wc = wordcloud(bag); 
+wc = wordcloud(bag, 'HighlightColor', 'r', 'Color', 'g');
 
 numTopics = 8;
 topics_in_bag = fitlda(bag,numTopics,'Verbose',0);

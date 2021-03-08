@@ -35,7 +35,12 @@ bag = removeInfrequentWords(bag, 2);
 
 mostFreq = topkwords(bag, 20);
 
-wc = wordcloud(bag); %Word Cloud command but don't do this unless
+
+figure
+wordcloud(bag, 'HighlightColor', 'r', 'Color', 'g'); %Word Cloud command but don't do this unless
+title("Word Cloud")
+
+
 %you want to break your computer LOL
 numTopics = 8;
 Wiz_topics8 = fitlda(bag,numTopics);
