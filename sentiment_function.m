@@ -7,6 +7,7 @@
 emb = fastTextWordEmbedding;
 
 data = readLexicon;
+
 idx = data.Label == "Positive";
 head(data(idx,:))
 
@@ -33,8 +34,31 @@ YTest = dataTest.Label;
 
 [YPred,scores] = predict(mdl,XTest);
 
+%figure
+%confusionchart(YTest,YPred);
+
+
+%tokenized thingy of words
+documents = document;
+
+idx = ~isVocabularyWord(emb,documents.Vocabulary);
+documents = removeWords(documents,idx);
+
+words = document.Vocabulary;
+words(ismember(words,wordsTrain)) = [];
+
+vec = word2vec(emb,words);
+[YPred,scores] = predict(mdl,vec);
+
 figure
-confusionchart(YTest,YPred);
+subplot(1,2,1)
+idx = YPred == "Positive";
+wordcloud(words(idx),scores(idx,1));
+title("Predicted Positive Sentiment")
+
+subplot(1,2,2)
+wordcloud(words(~idx),scores(~idx,2));
+title("Predicted Negative Sentiment")
 
 function data = readLexicon
 
@@ -55,9 +79,6 @@ labels(1:numel(wordsPositive)) = "Positive";
 labels(numel(wordsPositive)+1:end) = "Negative";
 
 data = table(words,labels,'VariableNames',{'Word','Label'});
-
-
-
 
 end
 
