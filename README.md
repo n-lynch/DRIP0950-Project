@@ -1,3 +1,3 @@
 # DRIP0950-Project
 
-![](DRIP1950.gif)
+![](DRIP0950.gif)
