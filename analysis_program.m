@@ -33,7 +33,9 @@ celebrity = celebrity_handle(2:end);%gets rid of the @ so it can be looked up
 celebrity_csv = strcat(celebrity, '.csv');%finds the right csv by adding 
 %"csv" to the looked up name 
 
-disp("Here is a wordcloud and histogram of the words used most frequently on their account!")
+disp("Here are three wordclouds and a histogram of the words used most frequently on their account!")
+disp("The first figure contains a wordcloud and histogram of all of their frequently used words...")
+disp("The second figure contains two wordclouds, one with the frequency of negative words and one with the frequency of positive words!")
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -71,17 +73,89 @@ bag = removeInfrequentWords(bag, 2);%removes a word if it has been used fewer th
 
 
 %Making of the wordclous
+figure
+subplot(1,2,1)
 mostFreq = topkwords(bag, 20);
 wc = wordcloud(bag, 'HighlightColor', '#64A6ED', 'Color', '#ED64C4');
+title("Most Frequently Used Words")
 
 %Making of the histogram
-figure;
+subplot(1,2,2)
 his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
-    "Orientation", "vertical", "FaceColor", "#ED64C4", "DisplayOrder", "ascend");
-title(strcat(celebrity + "'s most frequent words"));
+    "Orientation", "vertical", "FaceColor", "#64A6ED", "DisplayOrder", "ascend");
+title(strcat(celebrity_handle + "'s Most Frequently Used Words"));
 xlabel("Count");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Sentiment thingy
+% negative words file = 'negative-words.txt'
+% positive words file = 'positive-words.txt'
+
+
+emb = fastTextWordEmbedding; %loads pretrained word embedding
+
+data = readLexicon; %uses function below
+
+idx = ~isVocabularyWord(emb,data.Word); %removes words that do not appear in emb
+data(idx,:) = [];
+
+numWords = size(data,1);
+cvp = cvpartition(numWords,'HoldOut',0.1);
+dataTrain = data(training(cvp),:);
+dataTest = data(test(cvp),:);
+
+wordsTrain = dataTrain.Word;
+XTrain = word2vec(emb,wordsTrain);
+YTrain = dataTrain.Label;
+
+mdl = fitcsvm(XTrain,YTrain); %trains classifier to sort words
+
+wordsTest = dataTest.Word;
+XTest = word2vec(emb,wordsTest);
+YTest = dataTest.Label;
+
+
+%document is tokenized list of words
+idx = ~isVocabularyWord(emb,document.Vocabulary); %removes words in document that do not appear in emb
+document = removeWords(document,idx);
+
+words = document.Vocabulary;
+words(ismember(words,wordsTrain)) = [];
+
+vec = word2vec(emb,words);
+[YPred,scores] = predict(mdl,vec);
+
+figure %creation of both positive and negative wordclouds
+subplot(1,2,1)
+idx = YPred == "Positive";
+wordcloud(words(idx),scores(idx,1), 'HighlightColor', '#ED64C4', 'Color', '#64A6ED');
+title("Positive Words")
+
+subplot(1,2,2)
+wordcloud(words(~idx),scores(~idx,2), 'HighlightColor', '#ED64C4', 'Color', '#64A6ED');
+title("Negative Words")
+
+function data = readLexicon
+
+%reading positive words
+fidPositive = fopen('positive-words.txt');
+C = textscan(fidPositive, '%s', 'CommentStyle', ';');
+wordsPositive = string(C{1});
+
+%reading negative words
+fidNegative = fopen('negative-words.txt');
+C = textscan(fidNegative, '%s', 'CommentStyle', ';');
+wordsNegative = string(C{1});
+
+%creates a table of labeled words
+words = [wordsPositive;wordsNegative];
+labels = categorical(nan(numel(words),1));
+labels(1:numel(wordsPositive)) = "Positive";
+labels(numel(wordsPositive)+1:end) = "Negative";
+data = table(words,labels,'VariableNames',{'Word','Label'});
+
+end
 
 
 
