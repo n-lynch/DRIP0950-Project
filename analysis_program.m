@@ -74,13 +74,13 @@ bag = removeInfrequentWords(bag, 2);%removes a word if it has been used fewer th
 
 %Making of the wordclous
 figure
-subplot(1,2,1)
+subplot(2,2,1)
 mostFreq = topkwords(bag, 20);
 wc = wordcloud(bag, 'HighlightColor', '#64A6ED', 'Color', '#ED64C4');
 title("Most Frequently Used Words")
 
 %Making of the histogram
-subplot(1,2,2)
+subplot(2,2,2)
 his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
     "Orientation", "vertical", "FaceColor", "#64A6ED", "DisplayOrder", "ascend");
 title(strcat(celebrity_handle + "'s Most Frequently Used Words"));
@@ -126,13 +126,13 @@ words(ismember(words,wordsTrain)) = [];
 vec = word2vec(emb,words);
 [YPred,scores] = predict(mdl,vec);
 
-figure %creation of both positive and negative wordclouds
-subplot(1,2,1)
+%creation of both positive and negative wordclouds
+subplot(2,2,3)
 idx = YPred == "Positive";
 wordcloud(words(idx),scores(idx,1), 'HighlightColor', '#ED64C4', 'Color', '#64A6ED');
 title("Positive Words")
 
-subplot(1,2,2)
+subplot(2,2,4)
 wordcloud(words(~idx),scores(~idx,2), 'HighlightColor', '#ED64C4', 'Color', '#64A6ED');
 title("Negative Words")
 
