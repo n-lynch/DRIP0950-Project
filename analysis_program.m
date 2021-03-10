@@ -34,8 +34,8 @@ celebrity_csv = strcat(celebrity, '.csv');%finds the right csv by adding
 %"csv" to the looked up name 
 
 disp("Here are three wordclouds and a histogram of the words used most frequently on their account!")
-disp("The first figure contains a wordcloud and histogram of all of their frequently used words...")
-disp("The second figure contains two wordclouds, one with the frequency of negative words and one with the frequency of positive words!")
+disp("The first row contains a wordcloud and histogram of all of their frequently used words...")
+disp("The second row contains two wordclouds, one with the frequency of negative words and one with the frequency of positive words!")
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
