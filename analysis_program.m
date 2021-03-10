@@ -8,8 +8,10 @@ celebrity_list = ["@youtube", "@twitter", "@theellenshow", "@taylorswift13", "@s
     "@espn", "@cristiano", "@mileycyrus", "@drake", "@wizkhalifa", ...
     "@cnn", "@cnnbrk", "@billgates", "@kimkardashian", "@arianagrande", ...
     "@akshaykumar", "@barackobama", "@beingsalmankhan", "@bbcbreaking", "@fcbarcelona", "", ""];
+%array of all of the celebrity csv available 
+%had to add in 2 empty names so that the list could be reshaped into 13x4
 
-celebrity_list = reshape(celebrity_list, 13, 4);
+celebrity_list = reshape(celebrity_list, 13, 4);%reshapes array into 13x4
 
 %Welcome message, shows 50 celebrity handles
 disp("Hi! Welcome!")
@@ -27,8 +29,9 @@ while celebrity_handle ~= celebrity_list(:)
     celebrity_handle = input(Question2, 's');
 end
 
-celebrity = celebrity_handle(2:end);
-celebrity_csv = strcat(celebrity, '.csv');
+celebrity = celebrity_handle(2:end);%gets rid of the @ so it can be looked up
+celebrity_csv = strcat(celebrity, '.csv');%finds the right csv by adding 
+%"csv" to the looked up name 
 
 disp("Here is a wordcloud and histogram of the words used most frequently on their account!")
 
@@ -36,44 +39,46 @@ disp("Here is a wordcloud and histogram of the words used most frequently on the
 
 % Removes retweets and keeps original content
 everything_tweets = readtable(celebrity_csv,'PreserveVariableNames',true);
-toDelete = (everything_tweets.("Tweet Type") == "Retweet");
-everything_tweets(toDelete,:) = [];
-everything_tweets.("Tweet Type") = [];
+%reads in the table of all tweets
+toDelete = (everything_tweets.("Tweet Type") == "Retweet");%sets a variable 
+%for all of the rows with retweet in the column type
+everything_tweets(toDelete,:) = [];%deletes the rows that are retweets
+everything_tweets.("Tweet Type") = [];%deletes the column for tweet type 
+%since it is no longer needed
 original_tweets = everything_tweets;
 
 %Pre-processing tweets
-original_tweets = original_tweets.("Tweet Content");
-clean_tweets = eraseURLs(original_tweets);
-clean_tweets = lower(clean_tweets);
-clean_tweets = strtrim(clean_tweets);
+original_tweets = original_tweets.("Tweet Content");%pulls out words from the content column
+clean_tweets = eraseURLs(original_tweets);%removes urls
+clean_tweets = lower(clean_tweets);%converts everything to lower
+clean_tweets = strtrim(clean_tweets);%removes extra spaces
 
 
 %How to make a CLEAN bag
-document = tokenizedDocument(clean_tweets);
-document = removeStopWords(document);
-document = joinWords(document);
-at_accounts = contains (document, "@");
-at_delete = (at_accounts == true);
-document(at_delete, :) = [];
-document = tokenizedDocument(document);
-document = regexprep(document, '[^A-Za-z\'']', '');
-bag = bagOfWords(document);
-bag = removeInfrequentWords(bag, 2);
-[bag, docsRemoved] = removeEmptyDocuments(bag);
+document = tokenizedDocument(clean_tweets);%detects tokens (in this case
+%words) and creates an array with the distinct works
+document = removeStopWords(document);%removes articles and other words that
+%don't have much meaning for our analysis
+document = joinWords(document);%converts all tokens into strings
+at_accounts = contains (document, "@");%checks if a word has an @
+at_delete = (at_accounts == true);%sets a variable for all words with an @
+document(at_delete, :) = [];%deletes all words with an @
+document = tokenizedDocument(document);%redefine document as most clean version
+document = regexprep(document, '[^A-Za-z\'']', '');%includes only letters
+bag = bagOfWords(document);%records the number of times a word is used
+bag = removeInfrequentWords(bag, 2);%removes a word if it has been used fewer than 2x
+[bag, docsRemoved] = removeEmptyDocuments(bag);%creates an array of all of the words
 
 
 %Making of the wordclous
 mostFreq = topkwords(bag, 20);
 wc = wordcloud(bag, 'HighlightColor', '#64A6ED', 'Color', '#ED64C4');
 
-numTopics = 8;
-topics_in_bag = fitlda(bag,numTopics,'Verbose',0);
-
 %Making of the histogram
 figure;
 his = histogram("Categories", cellstr(wc.WordData(1:20)), "BinCounts", wc.SizeData(1:20),...
     "Orientation", "vertical", "FaceColor", "#ED64C4", "DisplayOrder", "ascend");
-title("The most frequent words");
+title(strcat(celebrity + "'s most frequent words"));
 xlabel("Count");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
